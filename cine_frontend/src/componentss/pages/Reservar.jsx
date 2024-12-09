@@ -8,12 +8,41 @@ const Reservar = () => {
 	 * definimos una variable username que mas adelante almacenaria el nombre del usuario mediante su token
 	 */
 	const [username, setUsername] = useState("");
-	const [userData,setUserData] = useState({username:"",fecha: "",pelicula:"",silla:""}); //estado de los parametros del formulario
+	const [isModalOpen,setIsModalOpen] = useState(false)
+	const [select, setSelect] = useState([]);
+	const [userData,setUserData] = useState({username:"",fecha: "",pelicula:"",sillas:"",hora:"",id_pelicula: "",user_id:"",costo:""}); //estado de los parametros del formulario
 	const { id } = useParams(); // traemos id = userparams() para acceder a la id
+	const [valueSelect, setValueSelect] = useState("");
+
+	const handleSelect = (e) =>{
+		let valueS;
+	   const {value} = e.target;
+		valueS =([...valueSelect,value])
+		setValueSelect(e.target.value)
+		setUserData({ ...userData, [e.target.name]: value}); 
+	}
 	const handleChange =(e)=>{
 		setUserData({...userData,[e.target.name]:e.target.value});
 	// handleChange para sacar los datos de los inputs mediante el name 
-	 } 
+	 }
+	const handleChangecheckbox = (e) =>{
+		let updatedSelect;
+		const {value, checked} = e.target;
+		if(checked){
+			updatedSelect =([...select,value])
+		} else{
+			updatedSelect = (select.filter((o) => o !== value))
+		}
+		setSelect(updatedSelect);
+        setUserData({ ...userData, [e.target.name]: updatedSelect }); 
+	}
+	const openPopup=()=>{
+		setIsModalOpen(true)
+	  }
+	
+	  const handleClose=()=>{
+		setIsModalOpen(false)
+	  }
 	
   const peliculas = {
 	// un array de peliculas que contendria la informacion de las peliculas
@@ -103,24 +132,30 @@ const Reservar = () => {
 
 const handleSubmit = async (e) =>{
 	// validaciones para poder enviar los datos de la reserva
-	const sillas =['A1','A2','A3','A5','B1','B2','B3','C1','C2','C3','C4','C5','D1','D2','D3','D4','D5']
-    const SillaValida = sillas.includes(userData.silla)
-	console.log(SillaValida);
+	
+	
 	e.preventDefault();
 	if(!userData.username || !userData.pelicula){
 		alert('Inicia sesión para acceder a las funciones de el aplicativo');
 	}
-	else if(!userData.fecha || !userData.silla){
-		alert('Selecciona la fecha y silla para completar tu reserva')
-		
+	else if(!userData.fecha || !userData.sillas || !userData.hora){
+		alert('Completa todos los campos para terminar tu reserva')
+		console.log(select)
+		console.log('hora desde la variable valueSelect',valueSelect);
+		console.log(userData.hora);
+		console.log(userData.user_id);
+		console.log(userData.id_pelicula)
+		console.log('Costo de las sillas',userData.costo)
 	}
-	else if(!SillaValida){
-		alert('Escribe una silla válida');
+	else if(userData.sillas.length < 1 ){
+		alert('escoje por lo menos una silla')
+
 	}
+	
 	else{
 		await axios.post('http://localhost:3000/api/v1/users/reservar',userData).then((res)=>{
-		  console.log(res.data);
-		  alert(`(Reserva Exitosa) Nombre: ${username}  Fecha: ${userData.fecha}  Película: ${userData.pelicula} Silla: ${userData.silla} `);
+			openPopup()
+		 
 		}).catch((error) => {
 			console.log(error);
 			alert(error.response.data.error);
@@ -128,6 +163,7 @@ const handleSubmit = async (e) =>{
 	  }
 	};
     
+    const precio = 5000 * userData.sillas.length
 	useEffect(() => { // el useEffect es una funcion que se ejecuta sola, en este caso cuando se ejecutaría cada vez que cambie el id de pelicula[pelicula]
 		// obtenemos el token para acceder a los datos del usuario que está almacenado en el localStorage
 		const token = localStorage.getItem("token");
@@ -149,6 +185,9 @@ const handleSubmit = async (e) =>{
 				...prevData,
 				username: data.msg.username,
 				pelicula: pelicula.nombre,
+				id_pelicula: id,
+				user_id: data.msg.id,
+				costo: precio
 			  }));
 			})
 			.catch((e) => {
@@ -158,9 +197,42 @@ const handleSubmit = async (e) =>{
 		  
 		}
 	  }, [pelicula]);
+	  
+	  
+	 
+	 
 
   return (
     <main>
+		
+		    {isModalOpen && (
+			<div className="containermodal">
+            <div className='reservamodal'>
+				<div className="headermodal">             
+                <img src="/img/images_films/Cineimg-removebg-preview.png" alt="" width="100px" height="100px" />
+				<h1>¡Reserva Exitosa!</h1> 
+				<img src="/img/images_films/CineVolteado.png" width="100px" height="100px"/>
+				
+				</div>  
+				<div className="ReservaContenido">
+				<div className="datos">
+				<h2>Nombre: {username}</h2> <h2>Sillas Reservadas: {userData.sillas.toString()}</h2>
+				<h2>Fecha: {userData.fecha}</h2>
+				<h2>Hora: {userData.hora}</h2> <h2>Costo: {userData.costo.toLocaleString("es-CO")} - Precio por silla: 5.000 COP</h2>
+				
+				</div>
+				<div className="peliculamodal"><br />
+					<img src={pelicula.imagen}  className="imgModal" />
+					<h3>{pelicula.nombre}</h3>
+					<span className='closemodal' onClick={handleClose}>Cerrar</span>
+				</div>
+				</div>	
+				
+
+            </div>	
+			</div>
+            )}
+        
       <section>
         <section className="ficha-tecnica">
 			<ul>
@@ -177,109 +249,135 @@ const handleSubmit = async (e) =>{
 				<div>
 					<label >A1</label>
 					<img src="/img/images/silla.png" alt="" width="75px"/>
+					<input type="checkbox" name="sillas" value="A1"onChange={handleChangecheckbox}/>
 					
 				</div>
 				<div>
 					<label >A2</label>
 					<img src="/img/images/silla.png" alt="" width="75px"/>
+					<input type="checkbox"name="sillas" value="A2"onChange={handleChangecheckbox}/>
 					
 				</div>
 				<div>
 					<label >A3</label>
 					<img src="/img/images/silla.png" alt="" width="75px"/>
+					<input type="checkbox"name="sillas" value="A3"onChange={handleChangecheckbox}/>
 				
 				</div>
 				<div>
 					<label >A4</label>
 					<img src="/img/images/silla.png" alt="" width="75px"/>
+					<input type="checkbox"name="sillas" value="A4"onChange={handleChangecheckbox}/>
 					
 				</div>
 				<div>
 					<label >A5</label>
 					<img src="/img/images/silla.png" alt="" width="75px"/>
+					<input type="checkbox"name="sillas" value="A5"onChange={handleChangecheckbox}/>
 					
 				</div>
 				<div>
 					<label >B1</label>
 					<img src="/img/images/silla.png" alt="" width="75px"/>
+					<input type="checkbox"name="sillas" value="B1"onChange={handleChangecheckbox}/>
 					
 				</div>
 				<div>
 					<label >B2</label>
 					<img src="/img/images/silla.png" alt="" width="75px"/>
+					<input type="checkbox"name="sillas" value="B2"onChange={handleChangecheckbox}/>
 					
 				</div>
 				<div>
 					<label >B3</label>
 					<img src="/img/images/silla.png" alt="" width="75px"/>
+					<input type="checkbox"name="sillas" value="B3"onChange={handleChangecheckbox}/>
 					
 				</div>
 				<div>
 					<label >B4</label>
 					<img src="/img/images/silla.png" alt="" width="75px"/>
+					<input type="checkbox"name="sillas" value="B4"onChange={handleChangecheckbox}/>
 					
 				</div>
 				<div>
 					<label >B5</label>
 					<img src="/img/images/silla.png" alt="" width="75px"/>
+					<input type="checkbox"name="sillas" value="B5"onChange={handleChangecheckbox}/>
 					
 				</div>
 				<div>
 					<label >C1</label>
 					<img src="/img/images/silla.png" alt="" width="75px"/>
+					<input type="checkbox"name="sillas" value="C1"onChange={handleChangecheckbox}/>
 					
 				</div>
 				<div>
 					<label >C2</label>
 					<img src="/img/images/silla.png" alt="" width="75px"/>
+					<input type="checkbox" name="sillas" value="C2"onChange={handleChangecheckbox}/>
 					
 				</div>
 				<div>
 					<label >C3</label>
 					<img src="/img/images/silla.png" alt="" width="75px"/>
+					<input type="checkbox" name="sillas" value="C3"onChange={handleChangecheckbox}/>
 					
 				</div>
 				<div>
 					<label >C4</label>
 					<img src="/img/images/silla.png" alt="" width="75px"/>
+					<input type="checkbox" name="sillas" value="C4"onChange={handleChangecheckbox}/>
 					
 				</div>
 				<div>
 					<label >C5</label>
 					<img src="/img/images/silla.png" alt="" width="75px"/>
+					<input type="checkbox" name="sillas" value="C5"onChange={handleChangecheckbox}/>
 					
 				</div>
 				<div>
 					<label >D1</label>
 					<img src="/img/images/silla.png" alt="" width="75px"/>
+					<input type="checkbox" name="sillas" value="D1" onChange={handleChangecheckbox}/>
 					
 				</div>
 				<div>
 					<label >D2</label>
 					<img src="/img/images/silla.png" alt="" width="75px"/>
+					<input type="checkbox" name="sillas" value="D2"onChange={handleChangecheckbox}/>
 					
 				</div>
 				<div>
 					<label >D3</label>
 					<img src="/img/images/silla.png" alt="" width="75px"/>
+					<input type="checkbox" name="sillas" value="D3" onChange={handleChangecheckbox}/>
 					
 				</div>
 				<div>
 					<label >D4</label>
 					<img src="/img/images/silla.png" alt="" width="75px"/>
+					<input type="checkbox" name="sillas" value="D4" onChange={handleChangecheckbox}/>
 					
 				</div>
 				<div>
 					<label >D5</label>
 					<img src="/img/images/silla.png" alt="" width="75px"/>
+					<input type="checkbox" name="sillas" value="D5" onChange={handleChangecheckbox}/>
 					
 				</div>
             </div>
 			    <h3>Escoja la fecha de la reserva</h3>
-				<input type="date" name="fecha" value={userData.fecha} onChange={handleChange}  /><br /><br />{/* con esto actualizamos los valores de los estados que 
-				seran enviados a la base de datos posteriormente*/}
-				<h3>Escoja la Silla que <br /> desea reservar </h3>
-				<input type="text" name= "silla" value={userData.silla.toUpperCase()} onChange={handleChange} maxLength="2"/> <br /> <br /> <br /> <br />
+				<input type="date" name="fecha" value={userData.fecha} onChange={handleChange} className="Inputfecha" /><br /><br />{/* con esto actualizamos los valores de los estados que 
+				seran enviados a la base de datos posteriormente*/}	
+				<h3>Elija una hora disponible</h3>
+				<select name="hora" onChange={handleSelect} >
+                <option>Horas disponibles</option>
+                <option value="5:00 PM"  >5:00 PM </option>
+                <option value="6:30 PM" >6:30 PM</option>
+                <option value="8:30 PM"  >8:30 PM</option>
+                <option value="10:30 PM" >10:30 PM</option>
+                </select><br /><br /><br /><br />
 				<button type="submit" onClick={handleSubmit}>Confirmar Reserva</button> {/*lleva a la funcion handle
 				submit que enviara los datos a la base de datos y nos dara su respecitva respuesta */}
 				

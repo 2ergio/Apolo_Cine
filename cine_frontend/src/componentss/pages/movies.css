@@ -323,15 +323,13 @@ div .dropdown-content{
     color: #151A32;
     background-color: gold;
 }
-.reserva input{
+.Inputfecha{
     border: none;
     padding: 10px;
     width: 40%;
     font-family: Arial, Helvetica, sans-serif;
     border-radius: 5px;
-    box-shadow: 5px 10px  #888888;
     margin-left: 25%;
-
 }
 .reserva h3{
     margin-left: 25%;
@@ -342,4 +340,93 @@ div .dropdown-content{
 }
 .reserva input:focus{
     outline: none;
+}
+.reserva select{
+    border: none;
+    padding: 10px;
+    width: 40%;
+    font-family: Arial, Helvetica, sans-serif;
+    border-radius: 5px;
+    margin-left: 25%;
+}
+.reserva select:focus{
+    outline: none;
+}
+
+.reservamodal{
+    background-color: #ffffff;
+    width: 100%;
+    border-radius: 10px;
+    z-index: 5;
+
+}
+.reservamodal h1 {
+    text-align: center;
+    color: red;
+    
+}
+
+.containermodal{
+    margin: 0 auto;
+    bottom: 15%;
+    left: 25%;
+    
+    bottom: 10%;
+    position: fixed;
+    width: 50%;
+    padding-bottom: 0 40;
+    height: 85%;
+    
+    display: flex;
+    justify-content: center;
+    z-index: 5;
+}
+
+.ReservaContenido{
+    display: flex;
+    background-color: #333;
+    margin: 1%;
+    height: 73%;
+    border-radius: 10px;
+    z-index: 5;
+}
+
+.closemodal{
+    background-color: #08165f;
+    color:#ffffff;
+    border-radius: 10px;
+    padding: 10px 20px;
+    margin: 0 auto;
+    
+    cursor: pointer; 
+    
+}
+
+.datos{
+    
+    position: relative;
+    color: white;
+    width: 100vh;
+    margin: 2%;
+    z-index: 5;
+
+}
+.peliculamodal{
+    text-align: center;
+    border-radius: 10px;
+    margin-left: 15%;
+    width: 50%;
+    background-color: #151a32;
+    color: white;
+    z-index: 5;
+}
+.imgModal{
+    margin: 2%;
+    width: 150px;
+    height: 200px;
+    border: 1px solid white;
+}
+.headermodal{
+    display: flex;
+    gap: 90px;
 }

@@ -123,7 +123,7 @@ const handleVerify= async (e) =>{
             </div>
             <div className="cont-input">
               <IonIcon icon={callOutline} />
-              <input type="text" id="telefono" placeholder="Teléfono" name='telefono' value={userData.telefono} onChange={handleChange}/>
+              <input type="text" id="telefono" placeholder="Teléfono" name='telefono' value={userData.telefono} maxLength={9} onChange={handleChange}/>
             </div>
             <div className="cont-input">
               <IonIcon icon={starOutline} />

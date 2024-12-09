@@ -17,16 +17,16 @@ const create = async (email, password, username,telefono,fecha_nacimiento) =>{
     return rows
 
 }
-const reservar = async(username,fecha,pelicula,silla) =>{
+const reservar = async(fecha,sillas,hora, id_pelicula, user_id,costo) =>{
     /**
      * este model serviria para poder reservar la fecha en la sala de cine
      */
-    console.log('reserva enviada a la base de datos',{username,fecha,pelicula,silla});
+    console.log('reserva enviada a la base de datos',{fecha,sillas,hora,id_pelicula,user_id,costo});
     const query ={
         text:`
-        INSERT INTO reservas(username,fecha,pelicula,silla) values($1,$2,$3,$4)
-        RETURNING username,fecha,pelicula,silla,id`,
-        values: [username,fecha,pelicula,silla]
+        INSERT INTO reservas(fecha,sillas,hora,id_pelicula,user_id,costo) values($1,$2,$3,$4,$5,$6)
+        RETURNING fecha,sillas,hora,id_pelicula,user_id,costo,id`,
+        values: [fecha,sillas,hora,id_pelicula,user_id,costo]
     }
     const {rows} = await db.query(query)
     return rows

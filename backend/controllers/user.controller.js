@@ -116,21 +116,15 @@ const reservar = async(req,res) =>{
     
     try{
         
-        const {username,fecha,pelicula,silla} = req.body
+        const {fecha,sillas,hora,id_pelicula,user_id,costo} = req.body
 
     
         
-    if(!username || !fecha || !pelicula || !silla){
+    if(!user_id || !fecha || !id_pelicula || !sillas || !hora ||!costo){
         return res.status(400).json({error: "Todos los campos son necesarios"})
         
     }
-    if(silla.length > 2){
-        return res.status(400).json({error: "el codigo de la silla solo debe contener dos caracteres"})
-    }
-
-
-
-    const newReserva = await UserModel.reservar(username,fecha,pelicula,silla)
+    const newReserva = await UserModel.reservar(fecha,sillas,hora,id_pelicula,user_id,costo)
     return res.status(201).json({ok: true, msg: newReserva})
 }catch(error){
     console.log(error)
