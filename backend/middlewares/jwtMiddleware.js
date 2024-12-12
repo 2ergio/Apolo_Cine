@@ -11,12 +11,31 @@ export const verifyToken = (req,res,next) =>{
     }
     token = token.split(" ")[1]
     try{
-        const {email} = jwt.verify(token, process.env.JWT_SECRET)
+        const {email,rol_id} = jwt.verify(token, process.env.JWT_SECRET)
         req.email = email
+        req.rol_id = rol_id
         next()
     } catch (error){
         console.log(error)
         return res.status(400).json({error: "invalid Token"})
     }
+
+}
+
+export const verifyAdmin = (req, res, next) =>{
+    if(req.rol_id === 1){
+        return next()
+    }
+    return res.status(403).json({error: "No puedes hacer eso"})
+    
+}
+
+
+export const verifyuser = (req, res, next)=>{
+    if(req.rol_id === 2 || req.rol_id === 1){
+        return next()
+    }
+
+    return res.status(403).json({error: "no puedes hacer eso"})
 
 }

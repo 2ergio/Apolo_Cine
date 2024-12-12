@@ -6,10 +6,11 @@ const create = async (email, password, username,telefono,fecha_nacimiento) =>{
      */
     console.log("Valores enviados a la base de datos:", { email, password, username,telefono,fecha_nacimiento });
     const query ={
+        
         text: `
         INSERT INTO users (email, password, username, telefono, fecha_nacimiento)
         VALUES ($1,$2,$3,$4,$5)
-        RETURNING email, username, id
+        RETURNING email, username, id, rol_id
         `,
         values: [email,password,username,telefono,fecha_nacimiento]
     }
@@ -44,11 +45,34 @@ const findEmail = async(email) =>{
     const {rows} = await db.query(query)
     return rows[0]
 }
+const findAll = async() =>{
+    const query ={
+        text: `
+        SELECT reservas.id,users.username,peliculas.nombre,reservas.fecha,reservas.sillas,reservas.costo,reservas.hora from
+        reservas inner join peliculas on reservas.id_pelicula = peliculas.id 
+        inner join users on reservas.user_id = users.id ORDER BY id DESC;
+        `
+        
+    }
+    const {rows} = await db.query(query)
+    return rows
+
+}
+const validarSillas = async (id_pelicula, fecha, hora, sillas) => {
+    return await db.query(
+        `SELECT * FROM reservas 
+         WHERE id_pelicula = $1 AND fecha = $2 AND hora = $3 AND $4::text[] && sillas;`,
+        [id_pelicula, fecha, hora, sillas]
+    );
+};
+
 /**
  * aca se exportarian los diferentes modelos para utilizarlos en diferentes partes del proyecto
  */
 export const UserModel ={
     create,
     findEmail,
-    reservar
+    reservar,
+    findAll,
+    validarSillas
 }

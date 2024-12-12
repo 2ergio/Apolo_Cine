@@ -1,8 +1,11 @@
 import React from "react";
 import { useParams } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
+
 import './movies.css';
 // ficha tecnica, se importa {useParams} necesario para navegar entre ids
 const Fichatecnica = () => {
+  const navigate = useNavigate()
   /*se define la constante id*/
   const { id } = useParams(); 
  /*se definen las peliculas siendo objetos que empiezan por una id y tendrian sus propiedades*/
@@ -115,7 +118,7 @@ const Fichatecnica = () => {
       </section>
 
       <section className="section">
-        <button onClick={() => window.location.href = `/reservar/${id}`}>Reservar Sillas</button>
+        <button onClick={() => navigate(`/reservar/${id}`)}>Reservar Sillas</button>
          {/*aca enviaria a otra seccion que seria la de reserva y tambien seria por ids*/}
       </section>
     </main>

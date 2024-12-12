@@ -12,12 +12,14 @@ import Fichatecnica from './componentss/pages/Fichatecnica';
 import Reservar from './componentss/pages/Reservar';
 import InicioSesion from './componentss/pages/InicioSesion';
 import Contactenos from './componentss/pages/Contactenos';
+import Reservas from './componentss/pages/ReservasAdmin';
 function App() {
   return (
     <BrowserRouter>
       <Header />
       <Routes>
       <Route path="/" element={<Main />} />
+        <Route path= "/ReservasAdmin" element= {<Reservas/>} />
         <Route path="/fichatecnica/:id" element={<Fichatecnica />} /> {/* Ruta dinamica para manejar las peliculas con id */}
         <Route path="/reservar/:id" element={<Reservar />} /> 
         <Route path="/InicioSesion" element={<InicioSesion />} />

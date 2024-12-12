@@ -286,7 +286,9 @@ button:hover {
 }
 
 .dropdown-content {
-    display: none;
+    display: flex;
+    flex-direction: column;
+
     position:absolute;
     width: 40%;
     height: 400;
@@ -301,6 +303,7 @@ button:hover {
     color: #000000;
     width: 105px;
     margin: 0;
+    
    
 }
 .dropdown-content button:hover {

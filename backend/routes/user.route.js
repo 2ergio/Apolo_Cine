@@ -4,7 +4,7 @@
  */
 import { Router } from "express";
 import { UserController } from "../controllers/user.controller.js";
-import {verifyToken} from "../middlewares/jwtMiddleware.js"
+import {verifyAdmin, verifyToken} from "../middlewares/jwtMiddleware.js"
 const router = Router()
 
 router.post('/register',UserController.register)
@@ -12,4 +12,6 @@ router.post('/login', UserController.login)
 router.post('/profile',verifyToken,UserController.profile)
 // en la parte profile, primero haria una verificacion del token para seguir con el controlador
 router.post('/reservar',UserController.reservar)
+// admin
+router.get('/reservas',verifyToken, verifyAdmin, UserController.findAll)
 export default router;

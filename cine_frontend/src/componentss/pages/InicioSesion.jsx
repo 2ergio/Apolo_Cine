@@ -1,4 +1,4 @@
-
+import { useEffect } from 'react';
 import { useState,useRef } from 'react'
 import "./inicioSesion.css";
 import axios from 'axios'
@@ -29,7 +29,7 @@ const contenedorRef = useRef(null);
 const [userData,setuserData] = useState({username:"",email:"",telefono:"",fecha_nacimiento:"",password:"",password2:""});
 // Obtener el formulario y los campos de entrada (login)
 const [user,setUserData]= useState({email:"",password:""});
-
+  localStorage.removeItem('token');
 const handleChange=(e)=>{
   // handlechange que serviria para almacenar el valor de los inputs del registro
     setuserData({...userData,[e.target.name]:e.target.value});
@@ -115,7 +115,7 @@ const handleVerify= async (e) =>{
             <span>Use su correo electrónico para registrarse</span>
             <div className="cont-input">
               <IonIcon icon={personOutline} />
-              <input type="text" id="nombre" name='username' placeholder="Nombre"value={userData.nombre} onChange={handleChange}  />
+              <input type="text" id="nombre" name='username' placeholder="Nombre"value={userData.nombre} maxLength={15} onChange={handleChange}  />
             </div>
             <div className="cont-input">
               <IonIcon icon={mailOutline} />
@@ -136,7 +136,7 @@ const handleVerify= async (e) =>{
             </div>
             <div className="cont-input">
               <IonIcon icon={lockClosedOutline} />
-              <input type="password" id="password" placeholder="Contraseña" name='password'value={userData.password} onChange={handleChange}  />
+              <input type="password" id="password" placeholder="Contraseña" name='password'value={userData.password} maxLength={10} onChange={handleChange}  />
               
             </div>
             <div className="cont-input">
@@ -146,6 +146,7 @@ const handleVerify= async (e) =>{
                 id="contraseña2"
                 name='password2'
                 placeholder="Repita su Contraseña"
+                maxLength={10}
                 value={userData.password2} onChange={handleChange}
               />
             </div>
@@ -182,6 +183,7 @@ const handleVerify= async (e) =>{
                 placeholder="Contraseña"
                 id="contraseñain"
                 name="password"
+                maxLength={10}
                 value={user.password} onChange={handleChange2} 
               />
             </div>

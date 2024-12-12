@@ -9,6 +9,7 @@ import axios from 'axios'
   y useState, useEffect para manejar los estados de las variables, tambien se importa axios para la con
   exion con la base de datos */
 const Header = () => {
+  const [reservas, setReservas] = useState("")
   const [login,setLogin] = useState(<button onClick={() => navigate(`/InicioSesion`)}>INICIO DE SESION</button>)
   const [username, setUsername] = useState(""); // Estado para el nombre de usuario
 
@@ -40,8 +41,13 @@ const Header = () => {
         },
       })
       .then(({ data }) => {
-        
+
+        if(data.msg.rol_id === 1){
+          setReservas(<button onClick={() => navigate(`/ReservasAdmin`)}>Reservas</button>)
+          console.log(reservas);
+        }
         setUsername(data.msg.username + '! '); // Actualizar el nombre de usuario
+        console.log(data);
         setCerrar(<button onClick={SesionCerrar}>CERRAR SESION</button>); // Mostrar el botón de cerrar sesión
         setLogin("");// borramos el boton de login
         
@@ -69,6 +75,7 @@ const Header = () => {
       Estado = <h1>Estado:desconectado</h1>
     
   }
+  
     
     return(
         <header>
@@ -78,9 +85,11 @@ const Header = () => {
           <button id="btnmenu">MENU</button>
           <div className="dropdown-content">
             <button onClick={() => navigate(`/`)}>CARTELERA</button><br />
-            <button onClick={() => navigate(`/Contactenos`)}>CONTACTO</button><br />
+            <button onClick={() => navigate(`/Contactenos`)}>CONTACTO</button> <br />
             {login} {/*boton de login que seria borrado en caso de que el usuario este conectado*/}
+            {reservas} <br />
             {cerrarSesion} {/*boton de cerrar sesion que serviria para desconectarse del servicio, (borrando el token)*/}
+            
           </div>
         </div>
         <h1>¡Bienvenido { username ||'Al Cine Apolo!'}</h1><br /> {/*si existe username muestra
@@ -93,23 +102,9 @@ const Header = () => {
         <div className="titulo">
           <h1>TEATRO APOLO</h1>
         </div>
-        <div className="sesion">
-          <label htmlFor="horario">Horario</label>
-          <select name="HORARIO" id="horarios">
-            <option value="Mañana">Mañana</option>
-            <option value="Tarde">Tarde</option>
-            <option value="Noche">Noche</option>
-          </select>
-          
-        </div>
         <div>
         
-          <input
-            type="search"
-            name="search"
-            id="search"
-            placeholder="Buscar"
-          />
+          
           
         </div>
       </nav>

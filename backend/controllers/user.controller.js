@@ -1,6 +1,6 @@
 /*Los controllers son las acciones que realizara el servidor cuando se haga la peticion
 , en cada controlador se definen las validaciones que son necesarias, para en base a ellas dar unas respuestas */
-
+import {db} from '../database/conexionDb.js'
 import bcryptjs from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 /* importamos los demas modulos que estan en las otras carpetas, de aqui importamos bcrypt que seria para la encr
@@ -31,7 +31,8 @@ tambien con el paquete bcrypt para poder encriptar la contraseña que sera envia
         const hashedpassword = await bcryptjs.hash(password,salt)
         const newUser = await UserModel.create(email,hashedpassword,username,telefono,fecha_nacimiento)
         const token = jwt.sign({
-            email: newUser.email
+            email: newUser.email,
+            role_id: newUser.role_id
         },
         process.env.JWT_SECRET,
         {
@@ -72,7 +73,8 @@ const login = async(req,res) =>{
             return res.status(401).json({error: " contraseña invalida"})
         }
         const token = jwt.sign({
-            email: user.email
+            email: user.email,
+            rol_id: user.rol_id
         },
         process.env.JWT_SECRET,
         {
@@ -111,21 +113,19 @@ const profile = async(req, res)=>{
 /*en este controlador de reserva, se declararan las diferentes variables necesarias para enviarlas a la base de datos
 se haran las respectivas validaciones que entregaran una respuesta  */
 const reservar = async(req,res) =>{
-    
-    
-    
     try{
-        
-        const {fecha,sillas,hora,id_pelicula,user_id,costo} = req.body
+        const { fecha, sillas, hora, id_pelicula, user_id, costo } = req.body;
+        if (!user_id || !fecha || !id_pelicula || !sillas || !hora || !costo) {
+            return res.status(400).json({ msg: "Todos los campos son necesarios" });
+        }
+        const validacion =  await UserModel.validarSillas(id_pelicula, fecha, hora, sillas)
+        if (validacion.rows.length > 0) {
+            return res.status(400).json({ msg: "Una o más sillas ya están reservadas" });
+        }
 
-    
-        
-    if(!user_id || !fecha || !id_pelicula || !sillas || !hora ||!costo){
-        return res.status(400).json({error: "Todos los campos son necesarios"})
-        
-    }
-    const newReserva = await UserModel.reservar(fecha,sillas,hora,id_pelicula,user_id,costo)
-    return res.status(201).json({ok: true, msg: newReserva})
+        // Realizar la reserva
+        const newReserva = await UserModel.reservar(fecha, sillas, hora, id_pelicula, user_id, costo);
+        return res.status(201).json({ ok: true, msg: newReserva });
 }catch(error){
     console.log(error)
         return res.status(500).json({
@@ -134,11 +134,27 @@ const reservar = async(req,res) =>{
         })
 
 }
+
 /* aqui se exportan para ser utilizadas en los diferentes archivos del backend */
+}
+const findAll = async(req,res) =>{
+    try{
+        const users = await UserModel.findAll()
+
+        return res.json({ok: true, msg: users})
+    }catch(error){
+        console.log(error)
+        return res.status(500).json({
+            ok: false,
+            msg: 'Error server'
+        })
+    }
+
 }
 export const UserController ={
     register,
     login,
     profile,
-    reservar
+    reservar,
+    findAll
 }
