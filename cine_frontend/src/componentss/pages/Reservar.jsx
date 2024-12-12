@@ -10,7 +10,7 @@ const Reservar = () => {
 	const [username, setUsername] = useState("");
 	const [isModalOpen,setIsModalOpen] = useState(false)
 	const [select, setSelect] = useState([]);
-	const [userData,setUserData] = useState({username:"",fecha: "",pelicula:"",sillas:"",hora:"",id_pelicula: "",user_id:"",costo:""}); //estado de los parametros del formulario
+	const [userData,setUserData] = useState({username:"",fecha: "",pelicula:"",sillas:"",hora:"",id_pelicula: "",user_id:"",costo:"",id_sala:""}); //estado de los parametros del formulario
 	const { id } = useParams(); // traemos id = userparams() para acceder a la id
 	const [valueSelect, setValueSelect] = useState("");
 
@@ -55,6 +55,7 @@ const Reservar = () => {
       duracion: "102 minutos",
       clasificacion: "+10",
       imagen: "/img/images_films/the_Wild_Robot_third_poster.jpg",
+	  sala: 1,
     },
     2: {
       nombre: "Transformers Uno",
@@ -66,6 +67,7 @@ const Reservar = () => {
       duracion: "120 minutos",
       clasificacion: "+12",
       imagen: "/img/images_films/Transformers_One-329708311-large.jpg",
+	  sala: 2,
     },
     3: {
       nombre: "No hables con extraños",
@@ -74,6 +76,7 @@ const Reservar = () => {
       duracion: "120 minutos",
       clasificacion: "+16",
       imagen: "/img/images_films/No_hables_con_extraanos-102462605-large.jpg",
+	  sala: 3,
     },
     4: {
         nombre: "Beetlejuice Beetlejuice",
@@ -84,6 +87,7 @@ const Reservar = () => {
       duracion: "105 minutos",
       clasificacion: "+13",
       imagen: "/img/images_films/beetlejuice-2-afiche-oficial-486x720.png",
+	  sala: 4,
     },
     5: {
         nombre: "KILL: Masacre en el Tren",
@@ -93,6 +97,7 @@ const Reservar = () => {
       duracion: "105 minutos",
       clasificacion: "+16",
       imagen: "/img/images_films/360 X 500 kill.jpg",
+	  sala: 5,
     },
     6: {
         nombre: "Deadpool & Wolverine",
@@ -103,6 +108,7 @@ const Reservar = () => {
         duracion: "128 minutos",
         clasificacion: "+18",
         imagen: "/img/images_films/Deadpool-3-poster-1.jpg",
+		sala: 6,
     },
     7: {
         nombre: "Mi Villano Favorito 4",
@@ -113,6 +119,7 @@ const Reservar = () => {
         duracion: "104 minutos",
         clasificacion: "+7",
         imagen: "/img/images_films/360 X 500mivillano4.jpg",
+		sala: 7,
     },
     8:{
         nombre: "The Substance",
@@ -124,6 +131,7 @@ const Reservar = () => {
         duracion: "144 minutos",
         clasificacion: "+18",
         imagen: "/img/images_films/poster-the-substance-664ca00b33247.jpg",
+		sala: 8,
     }
     
   };
@@ -187,7 +195,8 @@ const handleSubmit = async (e) =>{
 				pelicula: pelicula.nombre,
 				id_pelicula: id,
 				user_id: data.msg.id,
-				costo: precio
+				costo: precio,
+				id_sala: pelicula.sala
 			  }));
 			})
 			.catch((e) => {
@@ -219,7 +228,7 @@ const handleSubmit = async (e) =>{
 				<h2>Nombre: {username}</h2> <h2>Sillas Reservadas: {userData.sillas.toString()}</h2>
 				<h2>Fecha: {userData.fecha}</h2>
 				<h2>Hora: {userData.hora}</h2> <h2>Costo: {userData.costo.toLocaleString("es-CO")} - Precio por silla: 5.000 COP</h2>
-				
+				<h2>Sala: {userData.id_sala}</h2>
 				</div>
 				<div className="peliculamodal"><br />
 					<img src={pelicula.imagen}  className="imgModal" />

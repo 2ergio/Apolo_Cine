@@ -18,16 +18,16 @@ const create = async (email, password, username,telefono,fecha_nacimiento) =>{
     return rows
 
 }
-const reservar = async(fecha,sillas,hora, id_pelicula, user_id,costo) =>{
+const reservar = async(fecha,sillas,hora, id_pelicula, user_id,costo,id_sala) =>{
     /**
      * este model serviria para poder reservar la fecha en la sala de cine
      */
-    console.log('reserva enviada a la base de datos',{fecha,sillas,hora,id_pelicula,user_id,costo});
+    console.log('reserva enviada a la base de datos',{fecha,sillas,hora,id_pelicula,user_id,costo,id_sala});
     const query ={
         text:`
-        INSERT INTO reservas(fecha,sillas,hora,id_pelicula,user_id,costo) values($1,$2,$3,$4,$5,$6)
-        RETURNING fecha,sillas,hora,id_pelicula,user_id,costo,id`,
-        values: [fecha,sillas,hora,id_pelicula,user_id,costo]
+        INSERT INTO reservas(fecha,sillas,hora,id_pelicula,user_id,costo,id_sala) values($1,$2,$3,$4,$5,$6,$7)
+        RETURNING fecha,sillas,hora,id_pelicula,user_id,costo,id_sala,id`,
+        values: [fecha,sillas,hora,id_pelicula,user_id,costo,id_sala]
     }
     const {rows} = await db.query(query)
     return rows
@@ -48,11 +48,22 @@ const findEmail = async(email) =>{
 const findAll = async() =>{
     const query ={
         text: `
-        SELECT reservas.id,users.username,peliculas.nombre,reservas.fecha,reservas.sillas,reservas.costo,reservas.hora from
-        reservas inner join peliculas on reservas.id_pelicula = peliculas.id 
-        inner join users on reservas.user_id = users.id ORDER BY id DESC;
+        SELECT 
+        reservas.id,
+        users.username,
+        peliculas.nombre AS pelicula_nombre,
+        salas.nombre AS sala_nombre,  
+        reservas.fecha,
+        reservas.sillas,
+        reservas.costo,
+        reservas.hora
+        FROM
+        reservas
+INNER JOIN peliculas ON reservas.id_pelicula = peliculas.id
+INNER JOIN salas ON peliculas.id_sala = salas.id  
+INNER JOIN users ON reservas.user_id = users.id
+ORDER BY reservas.id DESC;
         `
-        
     }
     const {rows} = await db.query(query)
     return rows

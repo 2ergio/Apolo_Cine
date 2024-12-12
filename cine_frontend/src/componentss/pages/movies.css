@@ -334,6 +334,9 @@ div .dropdown-content{
 .reserva h3{
     margin-left: 25%;
 }
+.reserva p{
+    font-size: 50px;
+}
 
 .reserva button{
     margin-left: 36%;

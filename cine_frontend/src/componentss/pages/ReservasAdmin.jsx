@@ -88,6 +88,7 @@ const Reservas = () => {
             <th>Película</th>
             <th>Fecha</th>
             <th>Sillas</th>
+            <th>Sala</th>
             <th>Hora</th>
             <th>Costo</th>
           </tr>
@@ -103,13 +104,16 @@ const Reservas = () => {
                       <h2>{reserva.username}</h2>
                     </td>
                     <td>
-                      <h2>{reserva.nombre}</h2>
+                      <h2>{reserva.pelicula_nombre}</h2>
                     </td>
                     <td>
                       <h2>{reserva.fecha}</h2>
                     </td>
                     <td>
                       <h2>{reserva.sillas.toString()}</h2>
+                    </td>
+                    <td>
+                      <h2>{reserva.sala_nombre}</h2>
                     </td>
                     <td>
                       <h2>{reserva.hora}</h2>

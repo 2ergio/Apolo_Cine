@@ -114,17 +114,17 @@ const profile = async(req, res)=>{
 se haran las respectivas validaciones que entregaran una respuesta  */
 const reservar = async(req,res) =>{
     try{
-        const { fecha, sillas, hora, id_pelicula, user_id, costo } = req.body;
-        if (!user_id || !fecha || !id_pelicula || !sillas || !hora || !costo) {
+        const { fecha, sillas, hora, id_pelicula, user_id, costo, id_sala } = req.body;
+        if (!user_id || !fecha || !id_pelicula || !sillas || !hora || !costo || !id_sala) {
             return res.status(400).json({ msg: "Todos los campos son necesarios" });
         }
-        const validacion =  await UserModel.validarSillas(id_pelicula, fecha, hora, sillas)
+        const validacion =  await UserModel.validarSillas(id_pelicula, fecha, hora, sillas, id_sala)
         if (validacion.rows.length > 0) {
             return res.status(400).json({ msg: "Una o más sillas ya están reservadas" });
         }
 
         // Realizar la reserva
-        const newReserva = await UserModel.reservar(fecha, sillas, hora, id_pelicula, user_id, costo);
+        const newReserva = await UserModel.reservar(fecha, sillas, hora, id_pelicula, user_id, costo, id_sala);
         return res.status(201).json({ ok: true, msg: newReserva });
 }catch(error){
     console.log(error)
