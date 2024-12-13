@@ -12,6 +12,6 @@ router.post('/login', UserController.login)
 router.post('/profile',verifyToken,UserController.profile)
 // en la parte profile, primero haria una verificacion del token para seguir con el controlador
 router.post('/reservar',UserController.reservar)
-// admin
+//  ruta del admin en donde el usuario administrador podra observar las reservas
 router.get('/reservas',verifyToken, verifyAdmin, UserController.findAll)
 export default router;

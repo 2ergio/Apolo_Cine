@@ -118,6 +118,12 @@ const reservar = async(req,res) =>{
         if (!user_id || !fecha || !id_pelicula || !sillas || !hora || !costo || !id_sala) {
             return res.status(400).json({ msg: "Todos los campos son necesarios" });
         }
+        /**
+         * esta validacion tomara le model de validar silla, y entregara el resultado, si el usuairo reservo una silla 
+         * existente en la misma hora, fecha y pelicula, le devolvera una columna, y si la longitud
+         * de la columna es mayor a 0, devolvera error
+         * 
+         */
         const validacion =  await UserModel.validarSillas(id_pelicula, fecha, hora, sillas, id_sala)
         if (validacion.rows.length > 0) {
             return res.status(400).json({ msg: "Una o más sillas ya están reservadas" });
@@ -135,7 +141,8 @@ const reservar = async(req,res) =>{
 
 }
 
-/* aqui se exportan para ser utilizadas en los diferentes archivos del backend */
+/* este controlador sevira para obtener la respuesta de la peticion que hemos hecho, en este caso recibiremos
+lo que declara el modelo = findall*/
 }
 const findAll = async(req,res) =>{
     try{
@@ -151,6 +158,7 @@ const findAll = async(req,res) =>{
     }
 
 }
+/* aqui se exportan para ser utilizadas en los diferentes archivos del backend */
 export const UserController ={
     register,
     login,

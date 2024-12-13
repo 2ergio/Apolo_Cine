@@ -15,6 +15,7 @@ const Reservar = () => {
 	const [valueSelect, setValueSelect] = useState("");
 
 	const handleSelect = (e) =>{
+		// algoritmo para el input select
 		let valueS;
 	   const {value} = e.target;
 		valueS =([...valueSelect,value])
@@ -26,6 +27,7 @@ const Reservar = () => {
 	// handleChange para sacar los datos de los inputs mediante el name 
 	 }
 	const handleChangecheckbox = (e) =>{
+		// algoritmo del input checkbox en donde el usuario selecciona las sillas
 		let updatedSelect;
 		const {value, checked} = e.target;
 		if(checked){
@@ -148,12 +150,12 @@ const handleSubmit = async (e) =>{
 	}
 	else if(!userData.fecha || !userData.sillas || !userData.hora){
 		alert('Completa todos los campos para terminar tu reserva')
-		console.log(select)
-		console.log('hora desde la variable valueSelect',valueSelect);
-		console.log(userData.hora);
-		console.log(userData.user_id);
-		console.log(userData.id_pelicula)
-		console.log('Costo de las sillas',userData.costo)
+		//console.log(select)
+		//console.log('hora desde la variable valueSelect',valueSelect);
+		//console.log(userData.hora);
+		//console.log(userData.user_id);
+		//console.log(userData.id_pelicula)
+		//console.log('Costo de las sillas',userData.costo)
 	}
 	else if(userData.sillas.length < 1 ){
 		alert('escoje por lo menos una silla')
@@ -171,7 +173,8 @@ const handleSubmit = async (e) =>{
 	  }
 	};
     
-    const precio = 5000 * userData.sillas.length
+    /*Precio por silla que se multiplicaria por la cantidad de sillas reservadas*/
+	const precio = 5000 * userData.sillas.length
 	useEffect(() => { // el useEffect es una funcion que se ejecuta sola, en este caso cuando se ejecutaría cada vez que cambie el id de pelicula[pelicula]
 		// obtenemos el token para acceder a los datos del usuario que está almacenado en el localStorage
 		const token = localStorage.getItem("token");

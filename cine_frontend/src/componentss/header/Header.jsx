@@ -41,13 +41,18 @@ const Header = () => {
         },
       })
       .then(({ data }) => {
+        
 
         if(data.msg.rol_id === 1){
+          // obteniendo la informacion de la peticion, obtenemos el usuario con sus diferentes
+          // propiedades, aqui mira la id y si la id es =1 osea admin, entonces le agregara un nuevo
+          // boton el cual le servira para poder acceder a la ruta en donde podra observar las reservas 
+          // de los clientes
           setReservas(<button onClick={() => navigate(`/ReservasAdmin`)}>Reservas</button>)
-          console.log(reservas);
+          //console.log(reservas);
         }
         setUsername(data.msg.username + '! '); // Actualizar el nombre de usuario
-        console.log(data);
+        //console.log(data);
         setCerrar(<button onClick={SesionCerrar}>CERRAR SESION</button>); // Mostrar el botón de cerrar sesión
         setLogin("");// borramos el boton de login
         

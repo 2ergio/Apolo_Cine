@@ -21,7 +21,10 @@ export const verifyToken = (req,res,next) =>{
     }
 
 }
-
+/**
+ * funcion que verificara si el usuario tiene el rol admin, si lo tiene sigue a la otra funcion, de lo contrario el
+ * otro usuario no podran realiar la peticion
+ */
 export const verifyAdmin = (req, res, next) =>{
     if(req.rol_id === 1){
         return next()

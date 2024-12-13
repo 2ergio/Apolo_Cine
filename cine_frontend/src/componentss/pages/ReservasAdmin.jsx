@@ -5,11 +5,13 @@ import "./reservasAdmin.css";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 const Reservas = () => {
+  // definimos dos estas
   const [reservas, setReservas] = useState([]);
   const [filteredReservas, setFilteredsetreservas] = useState([]);
   const navigate = useNavigate();
 
   const handleSearch = (e) => {
+    // con esto filtramos la informacion
     const searchValue = e.target.value.toLowerCase();
     const filteredData = reservas.filter(
       (reservas) =>
@@ -20,6 +22,7 @@ const Reservas = () => {
     setFilteredsetreservas(filteredData);
   };
   useEffect(() => {
+    // verificamos si hay token, si no hay token regresamos el usuario al home
     const token = localStorage.getItem("token");
     if (!token) {
       navigate(`/`);
@@ -33,11 +36,14 @@ const Reservas = () => {
             Authorization: `Bearer ${token}`, // Enviar el token en el header
           },
         }
+        //hacemos la peticion para obtener le tokem y consigo la informacion del perfil, con esto 
+        // validamos el rol y decidimos si se queda o se va
       )
       .then(({ data }) => {
-        console.log(data.msg.rol_id);
+        //console.log(data.msg.rol_id);
 
         if (data.msg.rol_id !== 1) {
+          // si el rol es diferente de 1, va para home
           navigate(`/`);
         }
 
@@ -46,12 +52,16 @@ const Reservas = () => {
             headers: {
               Authorization: `Bearer ${token}`, // Enviar el token en el header
             },
+            // hacemos el get a la ruta para recibir el listado de las reservas
+            // igualmente si alguien diferente a rol = 1 logra ingresar a la vista de la ruta
+            // no podra ver la tabla con los registros
           })
           .then(({ data }) => {
-            console.log(data.msg);
+            //console.log(data.msg);
             setReservas(data.msg);
             setFilteredsetreservas(data.msg);
-            console.log("reservas", reservas);
+            // guarda la informacion de la peticion en los estados
+            //console.log("reservas", reservas);
           })
           .catch((e) => {
             console.log(e);
@@ -62,8 +72,8 @@ const Reservas = () => {
         navigate(`/`);
       });
   }, []);
-  console.log("reservas", reservas);
-  console.log("filteredreservas", filteredReservas);
+  //console.log("reservas", reservas);
+  //console.log("filteredreservas", filteredReservas);
   return (
     <div className="cuerpo">
       <div className="bodys">

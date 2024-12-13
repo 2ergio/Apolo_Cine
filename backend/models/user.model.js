@@ -45,6 +45,9 @@ const findEmail = async(email) =>{
     const {rows} = await db.query(query)
     return rows[0]
 }
+/**
+ * esta lo que hara es devolver la informacion de la consulta
+ */
 const findAll = async() =>{
     const query ={
         text: `
@@ -69,6 +72,8 @@ ORDER BY reservas.id DESC;
     return rows
 
 }
+// esta funcion validara si en el caso de que un usuario ingrese una silla que ya este reservada
+//en la misma fecha,pelicula y hora, le duvuelva una columna, si es el caso le mostrara un error
 const validarSillas = async (id_pelicula, fecha, hora, sillas) => {
     return await db.query(
         `SELECT * FROM reservas 

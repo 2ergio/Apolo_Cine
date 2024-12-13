@@ -70,7 +70,7 @@ const handleVerify= async (e) =>{
       // trae el token y redirige al index en donde se verificara si el usuario esta conectado o no
         await axios.post('http://localhost:3000/api/v1/users/login',user).then((res)=>{
             alert('Bienvenido');
-            console.log(res.data);
+            //console.log(res.data);
             localStorage.setItem('token', res.data.msg);
             window.location.href = '/';
         
