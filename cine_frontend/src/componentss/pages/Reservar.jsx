@@ -208,7 +208,7 @@ const handleSubmit = async (e) =>{
 		} else {
 		  
 		}
-	  }, [pelicula]);
+	  }, [pelicula,id,precio]);
 	  
 	  
 	 

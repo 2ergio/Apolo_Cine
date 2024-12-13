@@ -17,7 +17,7 @@ const Reservas = () => {
       (reservas) =>
         reservas.username.toLowerCase().includes(searchValue) ||
         reservas.fecha.toLowerCase().includes(searchValue) ||
-        reservas.nombre.toLowerCase().includes(searchValue)
+        reservas.pelicula_nombre.toLowerCase().includes(searchValue)
     );
     setFilteredsetreservas(filteredData);
   };
@@ -71,7 +71,7 @@ const Reservas = () => {
         console.log(e); // Si hay un error mostrarlo en la consola
         navigate(`/`);
       });
-  }, []);
+  }, [navigate]);
   //console.log("reservas", reservas);
   //console.log("filteredreservas", filteredReservas);
   return (
